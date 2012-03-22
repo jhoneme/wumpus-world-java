@@ -62,7 +62,7 @@ public class RunAllWumpusWorld{
 			numOfEpisodes = 7; 
 		}
 		
-		RunAllWoWNoSockets.RUNS = numOfEpisodes;
+		RunAllWumpusWorldNoSockets.RUNS = numOfEpisodes;
 //		WoWExperiment.
 		//Create an agentLoader that will start the agent when its run method is called
 		long t1 = System.currentTimeMillis();

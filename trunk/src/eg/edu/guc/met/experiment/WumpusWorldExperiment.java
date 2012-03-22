@@ -28,7 +28,14 @@ import org.rlcommunity.rlglue.codec.RLGlue;
 
 public class WumpusWorldExperiment {
 
-    private int whichEpisode = 0;
+	static public boolean sameWorld = true; // set to true if you want to start with 
+											 // the same World each episode.
+	
+	static public boolean printWorld = true; // set to false if you don't want the 
+											 // environment to print the world at each 
+											 // episode.
+											
+    private int whichEpisode = 0; // holds the current episode number;
 
     /* Run One Episode of length maximum cutOff*/
     private void runEpisode(int stepLimit) {
@@ -37,7 +44,9 @@ public class WumpusWorldExperiment {
         int totalSteps = RLGlue.RL_num_steps();
         double totalReward = RLGlue.RL_return();
 
-        System.out.println("Episode " + whichEpisode + "\t " + totalSteps + " steps \t" + totalReward + " total reward\t " + terminal + " natural end");
+		System.out.println("Episode " + whichEpisode + "\t " + totalSteps
+				+ " steps \t" + totalReward + " total reward\t " + terminal
+				+ " natural end");
 
         whichEpisode++;
     }
@@ -54,19 +63,22 @@ public class WumpusWorldExperiment {
         System.out.println("Agent responded to \"what is your name?\" with: " + responseMessage);
 
         responseMessage = RLGlue.RL_agent_message("If at first you don't succeed; call it version 1.0");
-        System.out.println("Agent responded to \"If at first you don't succeed; call it version 1.0  \" with: " + responseMessage + "\n");
+		System.out
+				.println("Agent responded to \"If at first you don't succeed; call it version 1.0  \" with: "
+						+ responseMessage + "\n");
 
         responseMessage = RLGlue.RL_env_message("what is your name?");
         System.out.println("Environment responded to \"what is your name?\" with: " + responseMessage);
         responseMessage = RLGlue.RL_env_message("If at first you don't succeed; call it version 1.0");
-        System.out.println("Environment responded to \"If at first you don't succeed; call it version 1.0  \" with: " + responseMessage);
+		System.out.println("Environment responded to \"If at first you don't succeed; call it version 1.0" 
+				+"  \" with: " + responseMessage);
 
         System.out.println("\n\n----------Running a few episodes----------");
         
     	long totalSteps = 0;
     	long totalReward = 0;
 
-        for (int i = 0; i < RunAllWoWNoSockets.RUNS; i++)
+        for (int i = 0; i < RunAllWumpusWorldNoSockets.RUNS; i++)
         {
         	runEpisode(0);
         	totalSteps += RLGlue.RL_num_steps();
@@ -79,6 +91,8 @@ public class WumpusWorldExperiment {
     }
 
     public static void main(String[] args) {
+    	if (args.length != 0 && args[0].equals("-same_world"))
+    		sameWorld = true;
         WumpusWorldExperiment theExperiment = new WumpusWorldExperiment();
         theExperiment.runExperiment();
     }

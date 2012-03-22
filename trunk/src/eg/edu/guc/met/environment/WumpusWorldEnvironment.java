@@ -32,38 +32,51 @@ import org.rlcommunity.rlglue.codec.types.Reward_observation_terminal;
 import org.rlcommunity.rlglue.codec.util.EnvironmentLoader;
 
 import eg.edu.guc.met.engine.GridWorld;
+import eg.edu.guc.met.experiment.WumpusWorldExperiment;
 
 public class WumpusWorldEnvironment implements EnvironmentInterface
 {
-	GridWorld world;
+	
+	static public boolean printWorld = true; // set to false if you don't want the 
+											 // environment to print the world at each 
+											 // episode.
+	
+	static GridWorld originalWorld; // in case sameWorld in WumpusWorldExperiment 
+									// was set to true, originalWorld will hold
+									// the grid which each episode will start from. 
+	
+	GridWorld world; // The current world that the environment is using right now. 
 	int width = 8;
 	int height = 8;
-	double probabilityPits = 0.2;
-	public WumpusWorldEnvironment(int width, int height, double probPit)
+	double probabilityPits = 0.2; // defines the probability in which the pits
+								  // will occur in the world
+	
+	public WumpusWorldEnvironment()
 	{
-		this(width, height);
-		this.probabilityPits = probPit;
 	}
+	
 	public WumpusWorldEnvironment(int width, int height)
 	{
 		this.height = height;
 		this.width = width;
 	}
 	
-	public WumpusWorldEnvironment()
+	public WumpusWorldEnvironment(int width, int height, double probPit)
 	{
+		this(width, height);
+		this.probabilityPits = probPit;
 	}
-
-	@Override
+	
 	public void env_cleanup()
 	{
 	}
 
-	@Override
+	// Is called only once at the start of the whole program. Refer to the
+	// RL_Glue manual for more information.
 	public String env_init()
 	{
-		world = new GridWorld();
-		world.initialize(this.width, this.height, 0.2);
+		originalWorld = new GridWorld();
+		originalWorld.initialize(this.width, this.height, this.probabilityPits);
         TaskSpecVRLGLUE3 theTaskSpecObject = new TaskSpecVRLGLUE3();
         theTaskSpecObject.setEpisodic();
 
@@ -87,19 +100,25 @@ public class WumpusWorldEnvironment implements EnvironmentInterface
         return taskSpecString;
 	}
 
-	@Override
+	// called at the start of each epsiode. Refer to Rl_Glue for
+	// more information.
 	public Observation env_start()
 	{
-		world = new GridWorld();
-		world.initialize(width, height, probabilityPits);
-// 		un-comment if you want to see the starting world. 
-//		world.print(System.out);
+		if (WumpusWorldExperiment.sameWorld)
+			world = originalWorld.duplicate();
+		else 
+		{
+			world = new GridWorld();
+			world.initialize(width, height, probabilityPits);
+		}
+		
+		if (printWorld)
+			world.print(System.out);
 		Observation theObservation = new Observation(5, 0, 0);
 		theObservation.intArray = new int [5];
 		return theObservation;
 	}
 
-	@Override
 	public Reward_observation_terminal env_step(Action action)
 	{
 		assert (action.getNumInts() == 1) : "Expecting a 1-dimensional int action. "
@@ -118,12 +137,13 @@ public class WumpusWorldEnvironment implements EnvironmentInterface
 		rewardObsTerm.setReward(world.getRewardPunishment());
 		
 		rewardObsTerm.setObservation(theObservation);
-//		world.print(System.out);
+	
+		if (printWorld)
+			world.print(System.out);
 
         return rewardObsTerm;
 	}
 	
-	@Override
 	public String env_message(String message)
 	{
         if(message.equals("what is your name?"))
