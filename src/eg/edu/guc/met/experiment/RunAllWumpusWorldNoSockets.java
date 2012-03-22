@@ -26,6 +26,14 @@ package eg.edu.guc.met.experiment;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.rlcommunity.rlglue.codec.AgentInterface;
+import org.rlcommunity.rlglue.codec.EnvironmentInterface;
+import org.rlcommunity.rlglue.codec.LocalGlue;
+import org.rlcommunity.rlglue.codec.RLGlue;
+
+import eg.edu.guc.met.agent.WumpusWorldRandomAgent_intActions;
+import eg.edu.guc.met.environment.WumpusWorldEnvironment;
+
 /**
 * A simple example of how can you run all components of the skeleton project from a single Java class
 * without using network sockets.  Because we remove the socket overhead, these experiments can execute
@@ -35,20 +43,20 @@ import java.io.IOException;
 * to how they are being used: locally or over the network.  This means they are still 100% RL-Glue
 * portable and can be used together with any other language.
 */
-public class RunAllWoWNoSockets{
+public class RunAllWumpusWorldNoSockets{
 	static int RUNS = 1000;
 		
 	public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException{
 		long t1 = System.currentTimeMillis();
 		//Create the Environment
-//		EnvironmentInterface theEnvironment=new WoWEnvironment();
+		EnvironmentInterface theEnvironment=new WumpusWorldEnvironment();
 		
-//		AgentInterface theAgent = new WumpusWorldRandomAgent();
+		AgentInterface theAgent = new WumpusWorldRandomAgent_intActions();
 		
-//		LocalGlue localGlueImplementation=new LocalGlue(theEnvironment,theAgent);
-//		RLGlue.setGlue(localGlueImplementation);
+		LocalGlue localGlueImplementation=new LocalGlue(theEnvironment,theAgent);
+		RLGlue.setGlue(localGlueImplementation);
 		
-		//Run the main method of the Skeleton Experiment, using the arguments were were passed
+		//Run the main method of the Wumpus World Experiment, using the arguments were were passed
 		//This will run the experiment in the main thread.  The Agent and Environment will run
 		//locally, without sockets.
 		WumpusWorldExperiment.main(args);
