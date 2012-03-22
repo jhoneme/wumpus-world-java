@@ -28,7 +28,7 @@ import org.rlcommunity.rlglue.codec.RLGlue;
 
 public class WumpusWorldExperiment {
 
-	static public boolean sameWorld = true; // set to true if you want to start with 
+	static public boolean sameWorld = false; // set to true if you want to start with 
 											 // the same World each episode.
 	
 	static public boolean printWorld = true; // set to false if you don't want the 
