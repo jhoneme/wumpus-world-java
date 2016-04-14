@@ -1,0 +1,2 @@
+This environment is compatible with RL-Glue
+The Wumpus World is a game where an agent has to go through a network (grid) of rooms where one of these rooms contains a mysterious monster (known simply as The Wumpus). Here are more specific details about the game
